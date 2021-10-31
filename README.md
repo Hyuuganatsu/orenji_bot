@@ -1,6 +1,6 @@
 # orenji_bot
 
-本仓库为量产型的代码仓库。功能使用了[Mirai](https://github.com/mamoe/mirai)、[graia](https://github.com/GraiaProject/Application)等框架实现。
+本仓库为量产型🍊的代码仓库。功能使用了[Mirai](https://github.com/mamoe/mirai)、[graia](https://github.com/GraiaProject/Application)等框架实现。
 
 ## 功能
 1. 的地得小警察 `modules/DedidePolice.py`：检测群消息中误用的“的地得”，并发消息at该群友提出修改方案。
@@ -9,6 +9,9 @@
 
 2. diss群友 `modules/cai.py`：使用随机语句diss群友。
 - 例：`/cai test ==> 这个test也太逊了`
+
+## 如何部署
+因为🍊太懒，这部分还没有写。
 
 ## 特别鸣谢
 感谢[sinceL](https://github.com/vayske)以及他的[Rumina](https://github.com/vayske/Rumina)对本项目部署以及代码编写的帮助！
