@@ -1,9 +1,3 @@
-from graia.saya import Saya, Channel
-from graia.saya.builtins.broadcast.schema import ListenerSchema
-from graia.application import GraiaMiraiApplication
-from graia.application.event.messages import *
-from graia.application.event.mirai import *
-from graia.application.message.elements.internal import At, Plain, Image
 import torch
 # import jieba
 from transformers import BertTokenizer, AlbertForMaskedLM
@@ -19,39 +13,18 @@ dict_file = "assets/dict.txt"
 tokenizer_path = 'voidful/albert_chinese_large'
 tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
 with open(dict_file, "r") as f:
-    tokenizer._add_tokens(f.readline().rstrip())
+    word = f.readline().rstrip()
+    tokenizer._add_tokens(word)
 _dict = tokenizer.vocab
 chars = {"0":"的","1":"地","2":"得"}
 char_ids = {tokenizer.convert_tokens_to_ids(c) for c in chars}
+print(char_ids)
 
 # model
 model_path = 'models/finetuned_albert_chinese_large_49.pt'
 model = AlbertForMaskedLM.from_pretrained(model_path)
-
-
-# 插件信息
-__name__ = "的地得小警察"
-__description__ = "检查群消息里的的地得是否正确"
-__author__ = "Orenji"
-__usage__ = "自动被调用"
-
-saya = Saya.current()
-channel = Channel.current()
-
-channel.name(__name__)
-channel.description(f"{__description__}\n使用方法：{__usage__}")
-channel.author(__author__)
-
-
-@channel.use(ListenerSchema(listening_events=[GroupMessage]))
-async def group_message_listener(
-    app: GraiaMiraiApplication,
-    message: MessageChain,
-    sender: Member,
-    group: Group
-):
-    text = message.asDisplay()
-
+while 1:
+    text = input()
     indices = set()
     for idx, c in enumerate(text):
         if c in chars.values(): indices.add(idx)
@@ -77,4 +50,4 @@ async def group_message_listener(
         rst.sort(key=lambda x: x[1], reverse=True)
         print(rst)
         if old_char != rst[0][0]:
-                await app.sendGroupMessage(group, MessageChain.create([At(target=sender.id), Plain(" {}->{}".format(old_char, rst[0][0]))]))
+            print(" {}->{}".format(old_char, rst[0][0]))

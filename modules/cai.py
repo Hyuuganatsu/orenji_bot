@@ -9,7 +9,7 @@ from random import choice
 def FirstChar(message, string: str):
     if type(message.__root__[0]) is not Plain:
         return False
-    return message.__root__[0].text.startswith(string)
+    return message.__root__[0].text.startswith(string+" ")
 
 # 插件信息
 __name__ = "cai"
