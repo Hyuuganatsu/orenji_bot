@@ -6,8 +6,9 @@ from graia.application.event.mirai import *
 from graia.application.message.elements.internal import At, Plain, Image
 import torch
 # import jieba
-from transformers import BertTokenizer, AlbertForMaskedLM
+from transformers import BertTokenizer, AutoModelForMaskedLM
 from torch.nn.functional import softmax
+from models.configs import pretrained
 
 dataset_file = "assets/dataset.txt"
 dict_file = "assets/dict.txt"
@@ -16,7 +17,7 @@ dict_file = "assets/dict.txt"
 #jieba.load_userdict(dict_file)
 
 # tokenizer
-tokenizer_path = 'voidful/albert_chinese_large'
+tokenizer_path = 'bert-base-chinese'
 tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
 with open(dict_file, "r") as f:
     tokenizer._add_tokens(f.readline().rstrip())
@@ -25,8 +26,8 @@ chars = {"0":"的","1":"地","2":"得"}
 char_ids = {tokenizer.convert_tokens_to_ids(c) for c in chars}
 
 # model
-model_path = 'models/finetuned_albert_chinese_large_49.pt'
-model = AlbertForMaskedLM.from_pretrained(model_path)
+model_path = 'models/finetuned_bert_chinese_large_7.pt'
+model = AutoModelForMaskedLM.from_pretrained(model_path)
 
 
 # 插件信息
@@ -77,4 +78,4 @@ async def group_message_listener(
         rst.sort(key=lambda x: x[1], reverse=True)
         print(rst)
         if old_char != rst[0][0]:
-                await app.sendGroupMessage(group, MessageChain.create([At(target=sender.id), Plain(" {}->{}".format(old_char, rst[0][0]))]))
+            await app.sendGroupMessage(group, MessageChain.create([At(target=sender.id), Plain(" {}->{}".format(old_char, rst[0][0]))]))

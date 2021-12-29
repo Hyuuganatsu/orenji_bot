@@ -1,5 +1,5 @@
 import os
-with open("../assets/dataset.txt", "r") as f:
+with open("../assets/shuangren.txt", "r") as f:
     lines = f.readlines()
     lines = [l.rstrip() for l in lines]
 rc = {"0":"的","1":"地","2":"得"}

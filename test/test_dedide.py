@@ -1,6 +1,6 @@
 import torch
 # import jieba
-from transformers import BertTokenizer, AlbertForMaskedLM
+from transformers import BertTokenizer, AlbertForMaskedLM, AutoModelForMaskedLM
 from torch.nn.functional import softmax
 
 dataset_file = "assets/dataset.txt"
@@ -21,16 +21,14 @@ char_ids = {tokenizer.convert_tokens_to_ids(c) for c in chars}
 print(char_ids)
 
 # model
-model_path = 'models/finetuned_albert_chinese_large_49.pt'
-model = AlbertForMaskedLM.from_pretrained(model_path)
+model_path = 'models/finetuned_albert_chinese_large_7.pt'
+model = AutoModelForMaskedLM.from_pretrained(model_path)
 while 1:
     text = input()
     indices = set()
     for idx, c in enumerate(text):
         if c in chars.values(): indices.add(idx)
     if indices:
-        with open(dataset_file, "a") as f:
-            f.write(text + "\n")
         idx = min(list(indices))
         old_char = text[idx]
         rst = []
@@ -48,6 +46,7 @@ while 1:
         for c in chars.values():
             rst.append((c, logit_prob[_dict[c]]))
         rst.sort(key=lambda x: x[1], reverse=True)
+        rst_dict = {char: prob for char, prob in rst}
         print(rst)
         if old_char != rst[0][0]:
-            print(" {}->{}".format(old_char, rst[0][0]))
+            print(" {}:{}->{}:{}".format(old_char, round(rst_dict[old_char],4), rst[0][0], round(rst_dict[rst[0][0]],4)))
