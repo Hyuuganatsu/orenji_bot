@@ -1,0 +1,1 @@
+SUPER_RESOLUTION_SERVICE_URL = "http://192.168.10.100/" # must end with /

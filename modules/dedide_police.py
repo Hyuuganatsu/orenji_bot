@@ -1,20 +1,22 @@
+# ariadne
+from graia.ariadne.app import Ariadne
+from graia.ariadne.event.message import GroupMessage
+from graia.ariadne.message.chain import MessageChain
+from graia.ariadne.message.element import Plain, At
+from graia.ariadne.model import Group, Member
+
+# saya
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
-from graia.application import GraiaMiraiApplication
-from graia.application.event.messages import *
-from graia.application.event.mirai import *
-from graia.application.message.elements.internal import At, Plain, Image
+
+# nlp model
 import torch
-# import jieba
 from transformers import BertTokenizer, AutoModelForMaskedLM
 from torch.nn.functional import softmax
-from models.configs import pretrained
 
 dataset_file = "assets/dataset.txt"
 dict_file = "assets/dict.txt"
 
-# jieba
-#jieba.load_userdict(dict_file)
 
 # tokenizer
 tokenizer_path = 'bert-base-chinese'
@@ -46,7 +48,7 @@ channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage]))
 async def group_message_listener(
-    app: GraiaMiraiApplication,
+    app: Ariadne,
     message: MessageChain,
     sender: Member,
     group: Group
