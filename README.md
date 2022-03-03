@@ -5,7 +5,7 @@
 ## 更新内容
 - 2022-3-2更新：
   - 更新了graia相关库，现在为[graia-saya](https://github.com/GraiaProject/Saya)管理module，[graia-ariadne](https://github.com/GraiaProject/Ariadne/)作为主框架。
-  - 增加了新功能：`图片超分辨率(2x super resolution)`。在群里回复一条带图片的消息并输入“2x”即可调用此功能。此功能依赖我的超分辨率http服务：[sr-orenji](http://sr-orenji.ml:6990/)(具体请见此仓库 edit later)。
+  - 增加了新功能：`图片超分辨率(2x super resolution)`。在群里回复一条带图片的消息并输入“2x”即可调用此功能。此功能依赖我的超分辨率http服务：[sr-orenji](http://sr-orenji.ml:6990/)(具体请见此仓库[super-resolution-web](https://github.com/buptorange/super-resolution-web-public))。
 - 2021-12-29更新：
   - 标注了所有数据，平衡后的数据集共1200条。改用bert-base-chinese代替albert，精度为93.81%。已将该模型更新部署到服务器。
 - 2021-12-28更新：
