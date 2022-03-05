@@ -1,5 +1,5 @@
 # python
-from random import choice
+from random import choice, random
 from string import Template
 
 # ariadne
@@ -15,8 +15,8 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 
-bakas = [Template('${name}小老弟行不行啊'),Template('这个${name}真的太逊了'),Template('逊馁，${name}'),Template('菜${name}'),
-         Template('菜狗${name}'),Template('咸鱼 ${name} 咸鱼'),Template('嫌弃${name}')]
+bakas = [Template('${name}小老弟行不行啊'), Template('这个${name}真的太逊了'), Template('逊馁，${name}'), Template('菜${name}'),
+         Template('菜狗${name}'), Template('咸鱼 ${name} 咸鱼'), Template('嫌弃${name}'), Template('笨蛋${name}')]
 
 
 # 插件信息
@@ -43,7 +43,10 @@ async def group_message_listener(
     name = message.asDisplay().split(' ', 1)
     print(name)
     baka_template = choice(bakas)
-    if name[1] != '':
+    # 30%几率diss到自己
+    if random() < 0.3:
+        msg = '还骂别人呢 ' + baka_template.substitute(name=sender.name)
+    elif name[1] != '':
         msg = baka_template.substitute(name=name[1])
     else:
         msg = baka_template.substitute(name="")
