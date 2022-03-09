@@ -17,10 +17,6 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 
-bakas = [Template('${name}小老弟行不行啊'), Template('这个${name}真的太逊了'), Template('逊馁，${name}'), Template('菜${name}'),
-         Template('菜狗${name}'), Template('咸鱼 ${name} 咸鱼'), Template('嫌弃${name}'), Template('笨蛋${name}')]
-
-
 # 插件信息
 __name__ = "random_setu"
 __description__ = "被调用时发一张色图到群里"
