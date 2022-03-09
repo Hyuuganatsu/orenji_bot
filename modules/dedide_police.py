@@ -61,23 +61,23 @@ async def group_message_listener(
     if indices:
         with open(dataset_file, "a") as f:
             f.write(text + "\n")
-        idx = min(list(indices))
-        old_char = text[idx]
-        rst = []
-
-        check = list(text)
-        check[idx] = '[MASK]'
-        check = "".join(check)
-        print(check)
-        maskpos = tokenizer.encode(check, add_special_tokens=True).index(103)
-
-        input_ids = torch.tensor(tokenizer.encode(check, add_special_tokens=True)).unsqueeze(0)  # Batch size 1
-        outputs = model(input_ids, labels=input_ids)
-        _, prediction_scores = outputs[:2]
-        logit_prob = softmax(prediction_scores[0, maskpos], dim=-1).data.tolist()
-        for c in chars.values():
-            rst.append((c, logit_prob[_dict[c]]))
-        rst.sort(key=lambda x: x[1], reverse=True)
-        print(rst)
-        if old_char != rst[0][0]:
-            await app.sendGroupMessage(group, MessageChain.create([At(target=sender.id), Plain(" {}->{}".format(old_char, rst[0][0]))]))
+        # idx = min(list(indices))
+        # old_char = text[idx]
+        # rst = []
+        #
+        # check = list(text)
+        # check[idx] = '[MASK]'
+        # check = "".join(check)
+        # print(check)
+        # maskpos = tokenizer.encode(check, add_special_tokens=True).index(103)
+        #
+        # input_ids = torch.tensor(tokenizer.encode(check, add_special_tokens=True)).unsqueeze(0)  # Batch size 1
+        # outputs = model(input_ids, labels=input_ids)
+        # _, prediction_scores = outputs[:2]
+        # logit_prob = softmax(prediction_scores[0, maskpos], dim=-1).data.tolist()
+        # for c in chars.values():
+        #     rst.append((c, logit_prob[_dict[c]]))
+        # rst.sort(key=lambda x: x[1], reverse=True)
+        # print(rst)
+        # if old_char != rst[0][0]:
+        #     await app.sendGroupMessage(group, MessageChain.create([At(target=sender.id), Plain(" {}->{}".format(old_char, rst[0][0]))]))

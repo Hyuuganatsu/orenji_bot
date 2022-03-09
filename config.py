@@ -1,1 +1,1 @@
-SUPER_RESOLUTION_SERVICE_URL = "http://192.168.10.100/" # must end with /
+SUPER_RESOLUTION_SERVICE_URL = "http://106.72.166.193:6990/" # must end with /
