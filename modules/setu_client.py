@@ -21,8 +21,8 @@ from graia.ariadne.model import Group, Member
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-add_setu_cmd_pattern = re.compile(r'(@\d+ )?好')
-delete_setu_cmd_pattern = re.compile(r'(@\d+ )?一般')
+add_setu_cmd_pattern = re.compile(r'^(@\d+ )?好$')
+delete_setu_cmd_pattern = re.compile(r'^(@\d+ )?一般$')
 
 setu_detect_buffer = deque() #stores message id, current buffer size == 1
 
