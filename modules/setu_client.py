@@ -7,7 +7,7 @@ import base64
 import aiohttp
 from collections import deque
 from config import BACKEND_URL
-from .utils import get_image_bytes_from_msg_id
+from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image, setu_detect_buffer
 
 # ariadne
 from graia.ariadne.app import Ariadne
@@ -24,8 +24,6 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 add_setu_cmd_pattern = re.compile(r'^(@\d+ )?好$')
 delete_setu_cmd_pattern = re.compile(r'^(@\d+ )?一般$')
 
-setu_detect_buffer = deque() #stores message id, current buffer size == 1
-
 # 插件信息
 __name__ = "setu_client"
 __description__ = "和orenji_mini(server)的数据库交互，实现存取色图"
@@ -40,26 +38,28 @@ channel.description(f"{__description__}\n使用方法：{__usage__}")
 channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('好'), DetectSuffix('好')]))
-async def buffer_add_setu_listener(
+async def add_setu_by_buffer_listener(
     app: Ariadne,
     message: MessageChain,
     sender: Member,
     group: Group
 ):
-    if setu_detect_buffer:
-        image_bytes = await setu_detect_buffer[0].get_bytes()
+    # get setu queue for this group
+    q = setu_detect_buffer[group.id]
+    if q:
+        image_bytes = await q[0].get_bytes()
         # try to add setu to backend db
         try:
             await add_image_bytes_to_backend_db(image_bytes)
         except Exception as e:  # if the image is broken(no url and no base64), return
             print(e)
-        setu_detect_buffer.popleft()
-        print("尝试添加到数据库，因为有人跟了好")
+        q.popleft()
+        print("尝试添加到数据库，因为有人跟了好。群:{}".format(group.name))
 
 
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage]))
-async def delete_or_quote_add_setu_listener(
+async def delete_or_add_setu_by_quote_listener(
     app: Ariadne,
     message: MessageChain,
     sender: Member,
@@ -68,9 +68,7 @@ async def delete_or_quote_add_setu_listener(
     text = message.asDisplay()
     # monitoring images. setu_detect_buffer will always having the latest image.
     if Image in message:
-        setu_detect_buffer.append(message.getFirst(Image))
-        while len(setu_detect_buffer) > 1:
-            setu_detect_buffer.popleft()
+        await clear_local_q_and_append_Image(message.getFirst(Image), group)
 
     if re.match(add_setu_cmd_pattern, text) != None: # maybe reply to a nice setu?
         # fetch the reply object
