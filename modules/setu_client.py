@@ -44,6 +44,7 @@ async def add_setu_by_buffer_listener(
     sender: Member,
     group: Group
 ):
+    if Quote in message: return
     # get setu queue for this group
     q = setu_detect_buffer[group.id]
     if q:
