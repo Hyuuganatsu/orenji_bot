@@ -50,7 +50,8 @@ async def add_setu_by_buffer_listener(
         image_bytes = await q[0].get_bytes()
         # try to add setu to backend db
         try:
-            await add_image_bytes_to_backend_db(image_bytes)
+            return_msg = await add_image_bytes_to_backend_db(image_bytes)
+            if return_msg: await app.sendGroupMessage(group, MessageChain([Plain(return_msg)]))
         except Exception as e:  # if the image is broken(no url and no base64), return
             print(e)
         q.popleft()
@@ -80,7 +81,8 @@ async def delete_or_add_setu_by_quote_listener(
 
         # try to add setu to backend db
         try:
-            await add_image_bytes_to_backend_db(image_bytes)
+            return_msg = await add_image_bytes_to_backend_db(image_bytes)
+            if return_msg: await app.sendGroupMessage(group, MessageChain([Plain(return_msg)]))
         except Exception as e:  # if the image is broken(no url and no base64), return
             print(e)
         print("尝试添加到数据库，因为有人回复了好")
@@ -118,12 +120,16 @@ async def get_random_setu_from_db_listener(
 async def add_image_bytes_to_backend_db(image_bytes):
     async with aiohttp.ClientSession() as session:
         async with session.post(BACKEND_URL + "setu/add", data={"setu": image_bytes, "mime": magic.from_buffer(image_bytes).split()[0]}) as response:
-            if response.status == 400:
+            if response.status == 204:
+                print("成功加入数据库")
+                return "好"
+            elif response.status == 400:
                 print("已经添加过该图片")
+            elif response.status == 418:
+                print("后端拒绝该图")
+                return "一般"
             elif response.status == 404:
                 print("请求中不包含setu文件")
-            elif response.status == 204:
-                print("成功加入数据库")
             else:
                 print("backend internal error")
             return
