@@ -59,6 +59,7 @@
         - 200：server成功返回了随机图片bytes。bot对其编码，作为图片发送到群里。
         - 404：server的数据库为空。bot无动作。
         - 500：server端错误。bot无动作。
+      - 例子：![Alt text](images/get-random_example.png?raw=true "sr_example")
 
 ## 如何部署
 因为🍊太懒，这部分还没有写。
