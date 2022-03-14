@@ -1,5 +1,5 @@
 # orenji_bot
-###English  |  [简体中文](README_zh_CN.md)
+#### English  |  [简体中文](README_zh_CN.md)
 
 This is the repository of orenji_bot🍊, a QQ chatbot equipped with nlp and cv capabilities. 
 
