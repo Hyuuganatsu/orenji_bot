@@ -16,5 +16,9 @@ graia-saya==0.0.13
 graia-scheduler==0.0.4
 selenium==4.0.0
 
+aiohttp
+python-magic
+pillow
+
 # to install mirai-api-httpv2, use ./mcl --update-package net.mamoe:mirai-api-http --channel stable-v2 --type plugin
 # to overwrite remote master's files to local branch but preserve other local files, git checkout (local) master; git reset --hard origin/master

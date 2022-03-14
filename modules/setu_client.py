@@ -21,8 +21,9 @@ from graia.ariadne.model import Group, Member
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
-add_setu_cmd_pattern = re.compile(r'^(@\d+ )?好$')
+add_setu_cmd_pattern = re.compile(r'^(@\d+ )?好(死)?$')
 delete_setu_cmd_pattern = re.compile(r'^(@\d+ )?一般$')
+hao_exact_cmd_pattern = re.compile(r'^好$')
 
 # 插件信息
 __name__ = "setu_client"
@@ -37,13 +38,15 @@ channel.name(__name__)
 channel.description(f"{__description__}\n使用方法：{__usage__}")
 channel.author(__author__)
 
-@channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('好'), DetectSuffix('好')]))
+@channel.use(ListenerSchema(listening_events=[GroupMessage]))
 async def add_setu_by_buffer_listener(
     app: Ariadne,
     message: MessageChain,
     sender: Member,
     group: Group
 ):
+    if re.match(hao_exact_cmd_pattern, message.asDisplay()) == None:
+        return
     if Quote in message: return
     # get setu queue for this group
     q = setu_detect_buffer[group.id]
@@ -51,7 +54,7 @@ async def add_setu_by_buffer_listener(
         image_bytes = await q[0].get_bytes()
         # try to add setu to backend db
         try:
-            return_msg = await add_image_bytes_to_backend_db(image_bytes)
+            return_msg = await add_image_bytes_to_backend_db(image_bytes, False)
             if return_msg: await app.sendGroupMessage(group, MessageChain([Plain(return_msg)]))
         except Exception as e:  # if the image is broken(no url and no base64), return
             print(e)
@@ -82,7 +85,8 @@ async def delete_or_add_setu_by_quote_listener(
 
         # try to add setu to backend db
         try:
-            return_msg = await add_image_bytes_to_backend_db(image_bytes)
+            force_add_flag = True if text.__contains__("好死") else False
+            return_msg = await add_image_bytes_to_backend_db(image_bytes, force_add_flag)
             if return_msg: await app.sendGroupMessage(group, MessageChain([Plain(return_msg)]))
         except Exception as e:  # if the image is broken(no url and no base64), return
             print(e)
@@ -99,7 +103,7 @@ async def delete_or_add_setu_by_quote_listener(
         print("尝试从数据库删除该色图")
 
 
-@channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('/se'), DetectSuffix('/se')]))
+@channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('setu'), DetectSuffix('setu')]))
 async def get_random_setu_from_db_listener(
     app: Ariadne,
     message: MessageChain,
@@ -118,9 +122,9 @@ async def get_random_setu_from_db_listener(
 ##
 
 # add setu handler
-async def add_image_bytes_to_backend_db(image_bytes):
+async def add_image_bytes_to_backend_db(image_bytes:bytes, force:bool):
     async with aiohttp.ClientSession() as session:
-        async with session.post(BACKEND_URL + "setu/add", data={"setu": image_bytes, "mime": magic.from_buffer(image_bytes).split()[0]}) as response:
+        async with session.post(BACKEND_URL + "setu/add", data={"setu": image_bytes, "mime": magic.from_buffer(image_bytes).split()[0], "force":str(int(force))}) as response:
             if response.status == 204:
                 print("成功加入数据库")
                 return "好"
@@ -128,7 +132,7 @@ async def add_image_bytes_to_backend_db(image_bytes):
                 print("已经添加过该图片")
             elif response.status == 418:
                 print("后端拒绝该图")
-                return "一般"
+                #return "一般"
             elif response.status == 404:
                 print("请求中不包含setu文件")
             else:
