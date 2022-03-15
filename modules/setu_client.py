@@ -7,7 +7,7 @@ import base64
 import aiohttp
 from collections import deque
 from config import BACKEND_URL
-from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image, setu_detect_buffer
+from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image, setu_detect_buffer, clear_local_q
 
 # ariadne
 from graia.ariadne.app import Ariadne
@@ -116,6 +116,7 @@ async def get_random_setu_from_db_listener(
             image_bytes = await response.read()
             print("正在发回")
             await app.sendGroupMessage(group, MessageChain([Image(base64=base64.b64encode(image_bytes).decode('UTF-8'))]))
+            await clear_local_q(group)
 
 ##
 ## http handlers
