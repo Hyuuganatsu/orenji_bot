@@ -54,11 +54,11 @@ async def group_message_listener(
         image_bytes = await get_image_bytes_from_msg_id(app, quote.id)
 
         # if image is oversize, refuse to 2x.
-        with PILImage.open(io.BytesIO(image_bytes)) as img:
-            w, h = img.size
-            if w * h >= 3686400: # size must <= 2560*1440
-                await app.sendGroupMessage(group, MessageChain([Plain("{}*{}太大啦，服务器会吃不消的~".format(w, h))]))
-                return
+        # with PILImage.open(io.BytesIO(image_bytes)) as img:
+        #     w, h = img.size
+        #     if w * h >= 3686400: # size must <= 2560*1440
+        #         await app.sendGroupMessage(group, MessageChain([Plain("{}*{}太大啦，服务器会吃不消的~".format(w, h))]))
+        #         return
 
 
         # try to request super resolution service using this image. If success, return the upscaled image
