@@ -1,12 +1,15 @@
 # python
 import hashlib
+import io
 import os
 import re
 import magic
 import base64
 import aiohttp
 from collections import deque
-from config import BACKEND_URL
+#import cv2
+#import numpy
+from local_secret_config import BACKEND_URL
 from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image, setu_detect_buffer, clear_local_q
 
 # ariadne
@@ -114,6 +117,13 @@ async def get_random_setu_from_db_listener(
     async with aiohttp.ClientSession() as session:
         async with session.get(BACKEND_URL+"setu/get-random") as response:
             image_bytes = await response.read()
+            # print("正在修改左上角像素")
+            # img_buffer_numpy = numpy.frombuffer(image_bytes, dtype=numpy.uint8)  # 将 图片字节码bytes  转换成一维的numpy数组 到缓存中
+            # frame = cv2.imdecode(img_buffer_numpy, 1)
+            # old_pixel = frame[0, 0]
+            # frame[0, 0] = ((old_pixel[0]+1)%256, (old_pixel[1]+1)%256, (old_pixel[2]+1)%256)
+            # output_io = io.BytesIO()
+            # image_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
             print("正在发回")
             await app.sendGroupMessage(group, MessageChain([Image(base64=base64.b64encode(image_bytes).decode('UTF-8'))]))
             await clear_local_q(group)

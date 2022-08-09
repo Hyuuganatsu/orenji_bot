@@ -12,6 +12,8 @@ from graia.ariadne.model import Friend, MiraiSession
 from graia.saya import Saya
 from graia.saya.builtins.broadcast import BroadcastBehaviour
 
+from local_secret_config import ACCOUNT
+
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -25,9 +27,9 @@ saya.install_behaviours(BroadcastBehaviour(broadcast))
 app = Ariadne(connect_info=CombinedAdapter(
         broadcast=broadcast,
         mirai_session=MiraiSession(
-            host="http://localhost:8080",
+            host="http://localhost:8848",
             verify_key="191932207",
-            account=1657321174
+            account=ACCOUNT
         ))
 )
 
