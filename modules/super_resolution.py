@@ -19,7 +19,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 # project
-from local_secret_config import BACKEND_URL
+from config import BACKEND_URL
 from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image
 
 

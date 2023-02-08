@@ -1,17 +1,11 @@
-import asyncio
-from graia.ariadne.message.chain import MessageChain, Plain
-import glob
 import os
-from graia.broadcast import Broadcast
 from graia.ariadne.app import Ariadne
-from graia.ariadne.connection.config import config, WebsocketClientConfig, HttpClientConfig, WebsocketServerConfig, HttpServerConfig, WebsocketClientInfo
-from graia.ariadne.model import Friend
+from graia.ariadne.connection.config import config, WebsocketClientConfig, HttpClientConfig
 from creart import create
 
 from graia.saya import Saya
-from graia.saya.builtins.broadcast import BroadcastBehaviour
 
-from local_secret_config import ACCOUNT
+from config import ACCOUNT
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 

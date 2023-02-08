@@ -17,8 +17,7 @@ from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 
 # project
-from loguru import logger
-from local_secret_config import APPLICABLE_RATE_TYPES
+from config import APPLICABLE_RATE_TYPES
 
 # 插件信息
 __name__ = "exchange rate reminder"

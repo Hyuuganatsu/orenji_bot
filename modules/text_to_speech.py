@@ -18,7 +18,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 # project
 from loguru import logger
 from graiax import silkcoder
-from local_secret_config import BACKEND_URL
+from config import BACKEND_URL
 
 # 2023-01-08 delete: this is useless after using Twilight, but it's here for future reference.
 #tts_cmd_pattern = re.compile(r'^/say \d+[ 　]')

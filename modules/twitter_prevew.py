@@ -16,7 +16,7 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 # project
 from loguru import logger
 from .utils import clear_local_q_and_append_Image
-from local_secret_config import TWITTER_BEARER_KEY
+from config import TWITTER_BEARER_KEY
 
 
 # 插件信息

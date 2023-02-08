@@ -8,7 +8,7 @@ import random
 import io
 from typing import Optional
 import aiohttp
-from local_secret_config import BACKEND_URL
+from config import BACKEND_URL
 from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image
 from PIL import Image as PILImage
 

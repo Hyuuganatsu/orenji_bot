@@ -16,7 +16,7 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 # project
-from local_secret_config import APPLICABLE_RATE_TYPES
+from config import APPLICABLE_RATE_TYPES
 
 detail_help_pattern = re.compile(r'^/help [^ ]+$')
 
