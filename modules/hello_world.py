@@ -9,6 +9,9 @@ from graia.ariadne.model import Friend
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
+#project
+from loguru import logger
+
 # 插件信息
 __name__ = "hello_world"
 __description__ = "test friend listener"
@@ -24,4 +27,5 @@ channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[FriendMessage]))
 async def friend_message_listener(app: Ariadne, friend: Friend):
-    await app.sendMessage(friend, MessageChain.create([Plain("Hello, World!")]))
+    logger.warning("caught friend message!")
+    await app.send_friend_message(friend, MessageChain(Plain("Hello, World!")))

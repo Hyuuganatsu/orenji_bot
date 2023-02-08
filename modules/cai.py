@@ -8,7 +8,9 @@ from graia.ariadne.event.message import GroupMessage
 from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.element import Plain
 from graia.ariadne.message.parser.base import DetectPrefix
+from graia.ariadne.message.parser.twilight import Twilight, FullMatch, ParamMatch, RegexResult, ForceResult
 from graia.ariadne.model import Group, Member
+from loguru import logger
 
 # saya
 from graia.saya import Saya, Channel
@@ -33,21 +35,19 @@ channel.description(f"{__description__}\n使用方法：{__usage__}")
 channel.author(__author__)
 
 
-@channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('/cai ')]))
+@channel.use(ListenerSchema(listening_events=[GroupMessage], inline_dispatchers=[Twilight([FullMatch("/cai"),
+                                                                                           ParamMatch() @ "diss_target"])]))
 async def group_message_listener(
     app: Ariadne,
-    message: MessageChain,
     sender: Member,
-    group: Group
+    group: Group,
+    diss_target: RegexResult
 ):
-    name = message.asDisplay().split(' ', 1)
-    print(name)
+    name = diss_target.result
     baka_template = choice(bakas)
     # 30%几率diss到自己
     if random() < 0.3:
         msg = '还骂别人呢 ' + baka_template.substitute(name=sender.name)
-    elif name[1] != '':
-        msg = baka_template.substitute(name=name[1])
     else:
-        msg = baka_template.substitute(name="")
-    await app.sendGroupMessage(group, MessageChain.create([Plain(msg)]))
+        msg = baka_template.substitute(name=name)
+    await app.send_group_message(group, MessageChain(Plain(msg)))

@@ -34,7 +34,7 @@
 #         message: MessageChain,
 #         sender: Friend,
 # ):
-#     text = message.asDisplay()
+#     text = message.display
 #
 #     indices = []
 #     for c in chars:

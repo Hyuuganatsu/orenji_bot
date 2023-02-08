@@ -1,9 +1,0 @@
-EPOCH = 7
-BATCH_SIZE = 16
-MASK_idx = 103
-PAD_idx = 0
-LR=5e-5
-DECAY=0.85
-DEVICE = "cpu"#"cuda:0"
-pretrained = "models/finetuned_bert_chinese_large_7.pt"#'voidful/albert_chinese_large'
-DATASET_path = "assets/picked_dataset_v2.txt"

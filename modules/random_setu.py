@@ -1,3 +1,5 @@
+### this module hasn't been refactored to use twilight.
+
 # python
 import base64
 from random import choice, random
@@ -38,17 +40,17 @@ async def group_message_listener(
     sender: Member,
     group: Group
 ):
-    text = message.asDisplay()
+    text = message.display
     query = None
     if len(text) > 6:
         query = await parse_search_query(text[6:])
     not_r18_image_bytes = await get_setu_bytes_from_lilocon_api(False, query)
     if type(not_r18_image_bytes) == bytes:
-        await app.sendGroupMessage(group, MessageChain([Image(base64=base64.b64encode(not_r18_image_bytes).decode('UTF-8'))]))
+        await app.send_group_message(group, MessageChain([Image(base64=base64.b64encode(not_r18_image_bytes).decode('UTF-8'))]))
     elif type(not_r18_image_bytes) == str:
-        await app.sendGroupMessage(group, MessageChain([Plain(not_r18_image_bytes)]))
+        await app.send_group_message(group, MessageChain([Plain(not_r18_image_bytes)]))
     else:
-        await app.sendGroupMessage(group, MessageChain([Plain("连接到lolicon api失败~")]))
+        await app.send_group_message(group, MessageChain([Plain("连接到lolicon api失败~")]))
 
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], decorators=[DetectPrefix('/r18')]))
@@ -58,17 +60,17 @@ async def group_message_listener(
     sender: Member,
     group: Group
 ):
-    text = message.asDisplay()
+    text = message.display
     query = None
     if len(text) > 5:
         query = await parse_search_query(text[5:])
     r18_image_bytes = await get_setu_bytes_from_lilocon_api(True, query)
     if type(r18_image_bytes) == bytes:
-        await app.sendGroupMessage(group, MessageChain([Image(base64=base64.b64encode(r18_image_bytes).decode('UTF-8'))]))
+        await app.send_group_message(group, MessageChain([Image(base64=base64.b64encode(r18_image_bytes).decode('UTF-8'))]))
     elif type(r18_image_bytes) == str:
-        await app.sendGroupMessage(group, MessageChain([Plain(r18_image_bytes)]))
+        await app.send_group_message(group, MessageChain([Plain(r18_image_bytes)]))
     else:
-        await app.sendGroupMessage(group,MessageChain([Plain("连接到lolicon api失败~")]))
+        await app.send_group_message(group,MessageChain([Plain("连接到lolicon api失败~")]))
 
 
 ##

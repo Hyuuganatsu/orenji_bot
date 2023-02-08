@@ -1,3 +1,5 @@
+### this module hasn't been refactored to use twilight.
+
 from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 from graia.ariadne.app import Ariadne
@@ -32,23 +34,36 @@ async def group_message_listener(
     group: Group
 ):
     if group.id != 954642206:
-        text = message.asDisplay()
+        text = message.display
         urls: List[str] = re.findall(pattern, text)
         for url in urls:
             url = url.replace(r'/#/', r'/', 1) # wyy
             message = await get_info(url)
             if message:
-                await app.sendGroupMessage(group, message)
+                await app.send_group_message(group, message)
 
 async def get_info(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             data = await response.text()
             soup = BeautifulSoup(data, 'html.parser')
-            title = soup.find_all('meta', property='og:title')[-1].attrs['content']
-            cover = soup.find_all('meta', property='og:image')[-1].attrs['content']
-            url = soup.find_all('meta', property='og:url')[-1].attrs['content']
-            if cover:
-                if 'hqdefault' in cover:
-                    cover = cover.replace('hqdefault', 'maxresdefault') # y2b
-                return MessageChain.create(Image(url=cover), Plain(title), Plain(url))
+            title = get_element(soup, 'og:title')
+            cover = get_element(soup, 'og:image')
+            url = get_element(soup, 'og:url')
+            if title and url:
+                if cover:
+                    #if 'hqdefault' in cover:
+                        #cover = cover.replace('hqdefault', 'maxresdefault') # y2b
+                    if 'https:' not in cover:   # bilibili
+                        cover = 'https:' + cover
+                    if '@' in cover:            # bilibili
+                        cover  = cover.split('@')[0]
+                    return MessageChain(Image(url=cover), Plain(f"{title} "), Plain(url))
+                return MessageChain(Plain(f"{title} "), Plain(url))
+            return None
+
+def get_element(soup: BeautifulSoup, prop: str):
+    elements = soup.find_all('meta', property=prop)
+    if len(elements) > 0:
+        return elements[-1].attrs['content']
+    return ""
