@@ -15,8 +15,9 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 
-bakas = [Template('${name}小老弟行不行啊'), Template('这个${name}真的太逊了'), Template('逊馁，${name}'), Template('菜${name}'),
-         Template('菜狗${name}'), Template('咸鱼 ${name} 咸鱼'), Template('嫌弃${name}'), Template('笨蛋${name}')]
+bakas = [Template('${name}小老弟行不行啊'), Template('这个${name}真的太逊了'), Template('菜${name}'), Template('${name}好菜'), Template('${name}太菜了'),
+         Template('没用的${name}'), Template('废物${name}'), Template('嫌弃${name}'), Template('笨蛋${name}'), Template('${name}好笨'),
+         Template('${name}太笨了'), Template('猪鼻${name}'), Template('请把${name}送回它的垃圾箱')]
 
 
 # 插件信息
