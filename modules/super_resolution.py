@@ -9,9 +9,9 @@ from PIL import Image as PILImage
 from graia.ariadne.app import Ariadne
 from graia.ariadne.event.message import GroupMessage, MessageEvent
 from graia.ariadne.message.chain import MessageChain
-from graia.ariadne.message.element import Image, Plain
+from graia.ariadne.message.element import Image, Plain, At
 from graia.ariadne.model import Group, Member
-from graia.ariadne.message.parser.twilight import Twilight, RegexMatch
+from graia.ariadne.message.parser.twilight import Twilight, FullMatch, ElementMatch
 from loguru import logger
 
 # saya
@@ -37,12 +37,15 @@ channel.description(f"{__description__}\n使用方法：{__usage__}")
 channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], inline_dispatchers=[Twilight([
-    RegexMatch(r'(@\d+ )?2x') # has pattern like "@12768888 2x", maybe a sr command
+    # pattern like "@12768888 2x" is a sr command
+    ElementMatch(At, optional=True),
+    FullMatch('2x')
 ])]))
 async def super_resolution_command_listener(
     app: Ariadne,
     group: Group,
-    event: MessageEvent
+    event: MessageEvent,
+    message: MessageChain,
 ):
     # fetch the reply object
     if not event.quote: return
