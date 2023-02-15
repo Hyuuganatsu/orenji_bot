@@ -135,7 +135,7 @@ async def get_random_setu_from_db_listener(
 ):
     logger.info("正获取随机色图")
     async with aiohttp.ClientSession() as session:
-        async with session.get(BACKEND_URL+"setu/get-random") as response:
+        async with session.get(BACKEND_URL+"api/setu/get-random") as response:
             image_bytes = await response.read()
             # print("正在修改左上角像素")
             # img_buffer_numpy = numpy.frombuffer(image_bytes, dtype=numpy.uint8)  # 将 图片字节码bytes  转换成一维的numpy数组 到缓存中
@@ -155,7 +155,7 @@ async def get_random_setu_from_db_listener(
 # add setu handler
 async def add_image_bytes_to_backend_db(image_bytes:bytes, force:bool):
     async with aiohttp.ClientSession() as session:
-        async with session.post(BACKEND_URL + "setu/add", data={"setu": image_bytes, "mime": magic.from_buffer(image_bytes).split()[0], "force":str(int(force))}) as response:
+        async with session.post(BACKEND_URL + "api/setu/add", data={"setu": image_bytes, "mime": magic.from_buffer(image_bytes).split()[0], "force":str(int(force))}) as response:
             if response.status == 204:
                 logger.info("成功加入数据库")
                 return "好"
@@ -174,7 +174,7 @@ async def add_image_bytes_to_backend_db(image_bytes:bytes, force:bool):
 async def delete_image_bytes_from_backend_db(image_bytes):
     img_sha = hashlib.sha256(image_bytes).hexdigest()
     async with aiohttp.ClientSession() as session:
-        async with session.delete(BACKEND_URL + "setu/delete/"+img_sha) as response:
+        async with session.delete(BACKEND_URL + "api/setu/delete/"+img_sha) as response:
             if response.status == 404:
                 logger.info("数据库中不存在该图")
             elif response.status == 400:

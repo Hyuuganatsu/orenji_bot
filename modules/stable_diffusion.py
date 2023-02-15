@@ -102,7 +102,7 @@ async def group_message_listener(
             logger.warning(data_for_print)
 
             async with aiohttp.ClientSession() as session:
-                async with session.post(BACKEND_URL+"stable_diffusion", json=data) as response:
+                async with session.post(BACKEND_URL+"api/stable_diffusion", json=data) as response:
                     logger.info(response)
                     data = await response.json()
                     if "image" not in data:

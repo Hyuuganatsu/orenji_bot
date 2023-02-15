@@ -54,7 +54,7 @@ async def group_message_listener(
     try:
         async with aiohttp.ClientSession() as session:
             # send sr request with data={text:string, speaker_id:int}
-            async with session.post(BACKEND_URL+"text_to_speech", data={"text": text, "speaker_id": speaker_id}) as response:
+            async with session.post(BACKEND_URL+"api/text_to_speech", data={"text": text, "speaker_id": speaker_id}) as response:
                 data = await response.json()
                 if "audio_strs" not in data:
                     print("requesting text-to-speech service failed!")

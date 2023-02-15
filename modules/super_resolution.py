@@ -78,7 +78,7 @@ async def super_resolution_command_listener(
 async def run_super_resolution(image_bytes: bytes) -> Optional[str]:
     async with aiohttp.ClientSession() as session:
         # send sr request with data={image:binary, tile_mode:str}
-        async with session.post(BACKEND_URL, data={"raw_image": image_bytes, "tile_mode":"4"}) as response:
+        async with session.post(BACKEND_URL+"api", data={"raw_image": image_bytes, "tile_mode":"4"}) as response:
             data = await response.json()
             if "task_id" not in data:
                 logger.warning("requesting super resolution service failed!")
@@ -88,7 +88,7 @@ async def run_super_resolution(image_bytes: bytes) -> Optional[str]:
         # try to retrieve result every one second
         for i in range(600):
             await asyncio.sleep(1)
-            async with session.get(BACKEND_URL+'get-result/{}'.format(task_id)) as response:
+            async with session.get(BACKEND_URL+'api/get-result/{}'.format(task_id)) as response:
                 data = await response.json()
                 if "state" not in data:
                     logger.warning("requesting sr result failed!")
