@@ -5,7 +5,8 @@ aiohttp
 python-magic
 Pillow
 graiax-silkcoder==0.3.0
-revChatGPT
+openai==0.27.0
+revChatGPT==3.0.5
 
 # to install mirai-api-httpv2, use ./mcl --update-package net.mamoe:mirai-api-http --channel stable-v2 --type plugin
 # to overwrite remote master's files to local branch but preserve other local files, git checkout (local) master; git reset --hard origin/master
