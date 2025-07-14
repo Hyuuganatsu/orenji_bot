@@ -1,0 +1,22 @@
+{
+  "module_config": {
+    "303488479": {
+      "cai": true,
+      "chatGPT": true,
+      "exchange_rate_reminder": true,
+      "find_source": true,
+      "help": true,
+      "link_preview": true,
+      "llm_listeners": true,
+      "random_setu": true,
+      "setu_client": true,
+      "stable_diffusion": true,
+      "summarizer": true,
+      "super_resolution": true,
+      "text_to_speech": true,
+      "twitter_prevew": true,
+      "utils": true
+    }
+  },
+  "admin_groups": []
+}

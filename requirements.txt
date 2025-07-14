@@ -1,12 +1,17 @@
-beautifulsoup4==4.9.3
+beautifulsoup4
 cloudscraper==1.2.58
-graia-ariadne[full]==0.10.3
+graia-ariadne[full]
 aiohttp
 python-magic
 Pillow
 graiax-silkcoder==0.3.0
 openai==0.27.0
 revChatGPT==3.0.5
+webdriver-manager
+selenium
+bilibili-api-python==16.1.1
+yt-dlp
+
 
 # to install mirai-api-httpv2, use ./mcl --update-package net.mamoe:mirai-api-http --channel stable-v2 --type plugin
 # to overwrite remote master's files to local branch but preserve other local files, git checkout (local) master; git reset --hard origin/master

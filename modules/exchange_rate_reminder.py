@@ -17,7 +17,8 @@ from graia.scheduler import timers
 from graia.scheduler.saya import SchedulerSchema
 
 # project
-from config import APPLICABLE_RATE_TYPES
+from config.config import APPLICABLE_RATE_TYPES
+from config.module_config import check_module_enabled
 
 # 插件信息
 __name__ = "exchange rate reminder"
@@ -28,9 +29,9 @@ __usage__ = "自动被调用"
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name(__name__)
-channel.description(f"{__description__}\n使用方法：{__usage__}")
-channel.author(__author__)
+# channel.name(__name__)
+# channel.description(f"{__description__}\n使用方法：{__usage__}")
+# channel.author(__author__)
 
 
 @channel.use(SchedulerSchema(timers.crontabify("0 0 * * * 0"))) # Beijing time 08h:00m
@@ -43,6 +44,7 @@ async def automatic_rate_reminder(app: Ariadne):
 
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], inline_dispatchers=[Twilight([FullMatch("/rate")])]))
+@check_module_enabled("exchange_rate_reminder")
 async def active_get_rate_listener(
     app: Ariadne,
     group: Group
@@ -55,15 +57,17 @@ async def get_rate_str() -> str:
     msg = "这是今天的汇率喵~\n================\n"#"  货币\t \t中间价\n"
     update_time = ""
     session = aiohttp.ClientSession()
+    seen_currency = set()
     async with session.get("https://www.boc.cn/sourcedb/whpj/enindex_1619.html") as response:
         soup = bs4.BeautifulSoup(await response.content.read())
         table = soup.find_all("table")[7]
         for tr in table("tr"):
             if not tr.td: continue
             currency_type = tr.td.string
-            if currency_type in APPLICABLE_RATE_TYPES.keys():
-                msg += "{}\t\t{}\n".format(APPLICABLE_RATE_TYPES[currency_type],tr("td")[5].string)
+            if currency_type not in seen_currency and currency_type in APPLICABLE_RATE_TYPES.keys():
+                msg += "{}\t\t{}\n".format(APPLICABLE_RATE_TYPES[currency_type],tr("td")[3].string)
                 update_time = tr("td")[6].string
+                seen_currency.add(currency_type)
     await session.close()
     msg += "================\n" + update_time
     return msg

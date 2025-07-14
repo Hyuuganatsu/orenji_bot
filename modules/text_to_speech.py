@@ -18,7 +18,8 @@ from graia.saya.builtins.broadcast.schema import ListenerSchema
 # project
 from loguru import logger
 from graiax import silkcoder
-from config import BACKEND_URL
+from config.config import BACKEND_URL
+from config.module_config import check_module_enabled
 
 # 2023-01-08 delete: this is useless after using Twilight, but it's here for future reference.
 #tts_cmd_pattern = re.compile(r'^/say \d+[ 　]')
@@ -33,15 +34,16 @@ __usage__ = "/say [character_idx] [text]"
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name(__name__)
-channel.description(f"{__description__}\n使用方法：{__usage__}")
-channel.author(__author__)
+# channel.name(__name__)
+# channel.description(f"{__description__}\n使用方法：{__usage__}")
+# channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], inline_dispatchers=[Twilight([
     FullMatch("/say").space(SpacePolicy.FORCE), # 强制尾随空格
     "speaker_id" @ ParamMatch().space(SpacePolicy.FORCE),
     "text" @ WildcardMatch()
 ])]))
+@check_module_enabled("text_to_speech")
 async def group_message_listener(
     app: Ariadne,
     group: Group,

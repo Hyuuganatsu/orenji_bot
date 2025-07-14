@@ -5,7 +5,7 @@ from creart import create
 
 from graia.saya import Saya
 
-from config import ACCOUNT
+from config.config import ACCOUNT
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -16,8 +16,8 @@ saya = create(Saya)
 app = Ariadne(config(
         ACCOUNT,
         "191932207",
-        WebsocketClientConfig(host="http://host.docker.internal:8849"),
-        HttpClientConfig(host="http://host.docker.internal:8849")
+        WebsocketClientConfig(host="http://host.docker.internal:8850"),
+        HttpClientConfig(host="http://host.docker.internal:8850")
 )
 )
 

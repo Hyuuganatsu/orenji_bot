@@ -19,8 +19,9 @@ from graia.saya import Saya, Channel
 from graia.saya.builtins.broadcast.schema import ListenerSchema
 
 # project
-from config import BACKEND_URL
-from .utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image
+from config.config import BACKEND_URL
+from utils.utils import get_image_bytes_from_msg_id, clear_local_q_and_append_Image
+from config.module_config import check_module_enabled
 
 
 # 插件信息
@@ -32,15 +33,16 @@ __usage__ = "reply to an image, and type \"2x\" to call this api"
 saya = Saya.current()
 channel = Channel.current()
 
-channel.name(__name__)
-channel.description(f"{__description__}\n使用方法：{__usage__}")
-channel.author(__author__)
+# channel.name(__name__)
+# channel.description(f"{__description__}\n使用方法：{__usage__}")
+# channel.author(__author__)
 
 @channel.use(ListenerSchema(listening_events=[GroupMessage], inline_dispatchers=[Twilight([
     # pattern like "@12768888 2x" is a sr command
     ElementMatch(At, optional=True),
     FullMatch('2x')
 ])]))
+@check_module_enabled("super_resolution")
 async def super_resolution_command_listener(
     app: Ariadne,
     group: Group,
@@ -57,7 +59,7 @@ async def super_resolution_command_listener(
     #if image is oversize, refuse to 2x.
     with PILImage.open(io.BytesIO(image_bytes)) as img:
         w, h = img.size
-        if w * h >= 6000000: # size must <= 2560*1440
+        if w * h >= 8300000: # size must <= 3840*2160
             await app.send_group_message(group, MessageChain(Plain("{}*{}太大啦，服务器会吃不消的~".format(w, h))))
             return
 
@@ -85,8 +87,8 @@ async def run_super_resolution(image_bytes: bytes) -> Optional[str]:
                 return
             task_id = data["task_id"]
 
-        # try to retrieve result every one second
-        for i in range(600):
+        # try to retrieve result every one second, up to 60 seconds
+        for i in range(60):
             await asyncio.sleep(1)
             async with session.get(BACKEND_URL+'api/get-result/{}'.format(task_id)) as response:
                 data = await response.json()
